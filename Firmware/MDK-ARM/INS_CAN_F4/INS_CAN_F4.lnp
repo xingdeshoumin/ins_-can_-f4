@@ -1,9 +1,11 @@
 --cpu=Cortex-M4.fp.sp
 "ins_can_f4\startup_stm32f405xx.o"
 "ins_can_f4\ins_task.o"
+"ins_can_f4\rm_send_task.o"
 "ins_can_f4\bsp_delay.o"
 "ins_can_f4\bsp_spi.o"
 "ins_can_f4\bsp_uart.o"
+"ins_can_f4\bsp_can.o"
 "ins_can_f4\mahonyahrs.o"
 "ins_can_f4\user_lib.o"
 "ins_can_f4\bmi088driver.o"

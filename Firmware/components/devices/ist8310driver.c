@@ -28,6 +28,10 @@
 
 #define IST8310_WRITE_REG_NUM 4 //IST8310需要设置的寄存器数目
 
+#define IST8310_X_OFFSET 148
+#define IST8310_Y_OFFSET 280
+#define IST8310_Z_OFFSET -643
+
 static const uint8_t ist8310_write_reg_data_error[IST8310_WRITE_REG_NUM][3] =
     {
         {0x0B, 0x08, 0x01},
@@ -100,9 +104,9 @@ void ist8310_read_mag(fp32 mag[3])
     ist8310_IIC_read_muli_reg(0x03, buf, 6);
 
     temp_ist8310_data = (int16_t)((buf[1] << 8) | buf[0]);
-    mag[0] = MAG_SEN * temp_ist8310_data;
+    mag[0] = MAG_SEN * -temp_ist8310_data + IST8310_X_OFFSET;
     temp_ist8310_data = (int16_t)((buf[3] << 8) | buf[2]);
-    mag[1] = MAG_SEN * temp_ist8310_data;
+    mag[1] = MAG_SEN * temp_ist8310_data + IST8310_Y_OFFSET;
     temp_ist8310_data = (int16_t)((buf[5] << 8) | buf[4]);
-    mag[2] = MAG_SEN * temp_ist8310_data;
+    mag[2] = MAG_SEN * -temp_ist8310_data + IST8310_Z_OFFSET;
 }

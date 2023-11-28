@@ -408,6 +408,16 @@
               <FileType>5</FileType>
               <FilePath>..\application\struct_typedef.h</FilePath>
             </File>
+            <File>
+              <FileName>rm_send_task.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\application\rm_send_task.c</FilePath>
+            </File>
+            <File>
+              <FileName>rm_send_task.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\application\rm_send_task.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -442,6 +452,16 @@
               <FileName>bsp_uart.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\bsp\boards\bsp_uart.h</FilePath>
+            </File>
+            <File>
+              <FileName>bsp_can.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\bsp\boards\bsp_can.c</FilePath>
+            </File>
+            <File>
+              <FileName>bsp_can.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\bsp\boards\bsp_can.h</FilePath>
             </File>
           </Files>
         </Group>

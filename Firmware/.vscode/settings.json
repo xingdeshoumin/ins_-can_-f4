@@ -1,0 +1,10 @@
+{
+    "files.associations": {
+        "*.m": "matlab",
+        "*.mlx": "matlab",
+        "rm_send_task.h": "c",
+        "bsp_can.h": "c",
+        "struct_typedef.h": "c",
+        "bmi088driver.h": "c"
+    }
+}

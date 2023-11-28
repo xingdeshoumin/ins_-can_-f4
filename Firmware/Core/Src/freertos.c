@@ -48,6 +48,7 @@ osThreadId imuTaskHandle;
 
 /* USER CODE END Variables */
 osThreadId defaultTaskHandle;
+osThreadId sendTaskHandle;
 
 /* Private function prototypes -----------------------------------------------*/
 /* USER CODE BEGIN FunctionPrototypes */
@@ -55,6 +56,7 @@ osThreadId defaultTaskHandle;
 /* USER CODE END FunctionPrototypes */
 
 void StartDefaultTask(void const * argument);
+void SendTask(void const * argument);
 
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
 
@@ -121,6 +123,10 @@ void MX_FREERTOS_Init(void) {
   osThreadDef(defaultTask, StartDefaultTask, osPriorityNormal, 0, 128);
   defaultTaskHandle = osThreadCreate(osThread(defaultTask), NULL);
 
+  /* definition and creation of sendTask */
+  osThreadDef(sendTask, SendTask, osPriorityIdle, 0, 256);
+  sendTaskHandle = osThreadCreate(osThread(sendTask), NULL);
+
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
   osThreadDef(imuTask, INS_task, osPriorityRealtime, 0, 1024);
@@ -145,6 +151,24 @@ __weak void StartDefaultTask(void const * argument)
     osDelay(1);
   }
   /* USER CODE END StartDefaultTask */
+}
+
+/* USER CODE BEGIN Header_SendTask */
+/**
+* @brief Function implementing the sendTask thread.
+* @param argument: Not used
+* @retval None
+*/
+/* USER CODE END Header_SendTask */
+__weak void SendTask(void const * argument)
+{
+  /* USER CODE BEGIN SendTask */
+  /* Infinite loop */
+  for(;;)
+  {
+    osDelay(1);
+  }
+  /* USER CODE END SendTask */
 }
 
 /* Private application code --------------------------------------------------*/
