@@ -2,6 +2,14 @@
 #define BSP_CAN_H
 #include "can.h"
 #include "stm32f4xx.h"
+#include "INS_task.h"
+#include "rm_send_task.h"
+
+typedef enum
+{
+    CAN_MAG_CAL_ID = 0x101,
+ 	
+} can_msg_id1;
 
 typedef struct {
     uint16_t postion;

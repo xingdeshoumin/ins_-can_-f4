@@ -38,4 +38,5 @@ typedef struct ist8310_real_data_t
 extern uint8_t ist8310_init(void);
 extern void ist8310_read_over(uint8_t *status_buf, ist8310_real_data_t *mpu6500_real_data);
 extern void ist8310_read_mag(fp32 mag[3]);
+extern void ist8310_mag_cal(fp32 magBias[3], fp32 magScale[3]);
 #endif

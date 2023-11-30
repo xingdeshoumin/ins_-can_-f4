@@ -6,6 +6,7 @@
 "ins_can_f4\bsp_spi.o"
 "ins_can_f4\bsp_uart.o"
 "ins_can_f4\bsp_can.o"
+"ins_can_f4\flashstorage.o"
 "ins_can_f4\mahonyahrs.o"
 "ins_can_f4\user_lib.o"
 "ins_can_f4\bmi088driver.o"

@@ -463,6 +463,16 @@
               <FileType>5</FileType>
               <FilePath>..\bsp\boards\bsp_can.h</FilePath>
             </File>
+            <File>
+              <FileName>FlashStorage.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\bsp\boards\FlashStorage.c</FilePath>
+            </File>
+            <File>
+              <FileName>FlashStorage.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\bsp\boards\FlashStorage.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

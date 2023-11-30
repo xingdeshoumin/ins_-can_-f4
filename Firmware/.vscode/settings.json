@@ -5,6 +5,8 @@
         "rm_send_task.h": "c",
         "bsp_can.h": "c",
         "struct_typedef.h": "c",
-        "bmi088driver.h": "c"
+        "bmi088driver.h": "c",
+        "bsp_delay.h": "c",
+        "flashstorage.h": "c"
     }
 }

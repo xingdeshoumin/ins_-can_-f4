@@ -50,4 +50,6 @@ ins_can_f4\rm_send_task.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr
 ins_can_f4\rm_send_task.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h
 ins_can_f4\rm_send_task.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h
 ins_can_f4\rm_send_task.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h
-ins_can_f4\rm_send_task.o: ..\application\struct_typedef.h
+ins_can_f4\rm_send_task.o: ../application/INS_task.h
+ins_can_f4\rm_send_task.o: ../application/struct_typedef.h
+ins_can_f4\rm_send_task.o: ../application/rm_send_task.h

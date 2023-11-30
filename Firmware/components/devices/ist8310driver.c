@@ -27,10 +27,7 @@
 #define IST8310_WHO_AM_I_VALUE 0x10 //设备 ID
 
 #define IST8310_WRITE_REG_NUM 4 //IST8310需要设置的寄存器数目
-
-#define IST8310_X_OFFSET 148
-#define IST8310_Y_OFFSET 280
-#define IST8310_Z_OFFSET -643
+#define IST8310_MAG_CAL_COUNT 1500
 
 static const uint8_t ist8310_write_reg_data_error[IST8310_WRITE_REG_NUM][3] =
     {
@@ -104,9 +101,48 @@ void ist8310_read_mag(fp32 mag[3])
     ist8310_IIC_read_muli_reg(0x03, buf, 6);
 
     temp_ist8310_data = (int16_t)((buf[1] << 8) | buf[0]);
-    mag[0] = MAG_SEN * -temp_ist8310_data + IST8310_X_OFFSET;
+    mag[0] = MAG_SEN * -temp_ist8310_data;
     temp_ist8310_data = (int16_t)((buf[3] << 8) | buf[2]);
-    mag[1] = MAG_SEN * temp_ist8310_data + IST8310_Y_OFFSET;
+    mag[1] = MAG_SEN * temp_ist8310_data;
     temp_ist8310_data = (int16_t)((buf[5] << 8) | buf[4]);
-    mag[2] = MAG_SEN * -temp_ist8310_data + IST8310_Z_OFFSET;
+    mag[2] = MAG_SEN * -temp_ist8310_data;
+}
+
+void ist8310_mag_cal(fp32 magBias[3], fp32 magScale[3])
+{
+    float mag_max[3] = {-32767.0f, -32767.0f, -32767.0f}, mag_min[3] = {32767.0f, 32767.0f, 32767.0f}, mag_temp[3] = {0.0f, 0.0f, 0.0f};
+    int32_t mag_bias[3] = {0, 0, 0}, mag_scale[3] = {0, 0, 0};
+    static const uint8_t wait_time = 10;
+    uint16_t sample_count = 0;
+
+    for (sample_count = 0; sample_count < IST8310_MAG_CAL_COUNT; sample_count++)
+    {
+        ist8310_read_mag(mag_temp);
+        for (int jj = 0; jj < 3; jj++) {
+            if(mag_temp[jj] > mag_max[jj]) mag_max[jj] = mag_temp[jj];
+            if(mag_temp[jj] < mag_min[jj]) mag_min[jj] = mag_temp[jj];
+        }
+        ist8310_delay_ms(wait_time);
+    }
+    
+    mag_bias[0]  = (mag_max[0] + mag_min[0])/2;  // get average x mag bias in counts
+    mag_bias[1]  = (mag_max[1] + mag_min[1])/2;  // get average y mag bias in counts
+    mag_bias[2]  = (mag_max[2] + mag_min[2])/2;  // get average z mag bias in counts
+    
+    magBias[0] = (float) mag_bias[0];  // save mag biases in G for main program
+    magBias[1] = (float) mag_bias[1];   
+    magBias[2] = (float) mag_bias[2];  
+       
+    // Get soft iron correction estimate
+    mag_scale[0]  = (mag_max[0] - mag_min[0])/2;  // get average x axis max chord length in counts
+    mag_scale[1]  = (mag_max[1] - mag_min[1])/2;  // get average y axis max chord length in counts
+    mag_scale[2]  = (mag_max[2] - mag_min[2])/2;  // get average z axis max chord length in counts
+
+    float avg_rad = mag_scale[0] + mag_scale[1] + mag_scale[2];
+    avg_rad /= 3.0f;
+
+    magScale[0] = avg_rad/((float)mag_scale[0]);
+    magScale[1] = avg_rad/((float)mag_scale[1]);
+    magScale[2] = avg_rad/((float)mag_scale[2]);
+    
 }

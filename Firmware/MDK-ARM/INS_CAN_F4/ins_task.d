@@ -57,5 +57,6 @@ ins_can_f4\ins_task.o: ../bsp/boards/bsp_uart.h
 ins_can_f4\ins_task.o: ../Core/Inc/usart.h
 ins_can_f4\ins_task.o: D:\Program Files\keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
 ins_can_f4\ins_task.o: D:\Program Files\keil_v5\ARM\ARMCC\Bin\..\include\stdarg.h
+ins_can_f4\ins_task.o: ../bsp/boards/FlashStorage.h
 ins_can_f4\ins_task.o: ../components/algorithm/MahonyAHRS.h
 ins_can_f4\ins_task.o: D:\Program Files\keil_v5\ARM\ARMCC\Bin\..\include\math.h

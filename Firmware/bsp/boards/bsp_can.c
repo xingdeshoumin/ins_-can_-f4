@@ -120,7 +120,7 @@ uint16_t cccc;
  */
 void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan)
 {
-	static uint8_t CAN1_RX_Buff[8], CAN2_RX_Buff[8];
+	static uint8_t CAN1_RX_Buff[8];
 	CAN_RxHeaderTypeDef Can1RxHeader,Can2RxHeader; //header we need to receive the data from CAN
 	//if the interruption source is CAN1, mainly the chassis
 	if (hcan->Instance == CAN1)
@@ -129,24 +129,12 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan)
 		//judge the ID to check which motor
 		switch (Can1RxHeader.StdId)
 		{
-            case 0x202: {
-//                motor.postion = CAN1_RX_Buff[0]<<8 | CAN1_RX_Buff[1];
-//                motor.speed = CAN1_RX_Buff[2]<<8 | CAN1_RX_Buff[3];
-                break;
-            }
+            case CAN_MAG_CAL_ID: 
+            {
+                mag_cal_flag = CAN1_RX_Buff[0];
+            }break;
 		}
 	}
-	// if (hcan->Instance == CAN1)
-	// {
-	// 	HAL_CAN_GetRxMessage(&hcan2,CAN_RX_FIFO0,&Can2RxHeader,CAN2_RX_Buff);
-	// 	switch (Can2RxHeader.StdId)
-	// 	{
-    //         case 0x202: {
-               
-    //             break;
-    //         }
-	// 	}
-	// }
     cccc++;//自增，判断是否成功进入CAN中断回调
 }
 

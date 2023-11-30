@@ -32,6 +32,7 @@
 #include "bmi088driver.h"
 #include "ist8310driver.h"
 #include "bsp_uart.h"
+#include "FlashStorage.h"
 #include "MahonyAHRS.h"
 #include "math.h"
 
@@ -60,10 +61,13 @@ volatile uint8_t accel_update_flag = 0;
 volatile uint8_t accel_temp_update_flag = 0;
 volatile uint8_t mag_update_flag = 0;
 volatile uint8_t imu_start_dma_flag = 0;
-
+uint8_t mag_cal_flag = 0;
+uint8_t do_once_flag;
 
 bmi088_real_data_t bmi088_real_data;
 ist8310_real_data_t ist8310_real_data;
+fp32 magBias[3] = {4.0f, -27.0f, 61.0f};
+fp32 magScale[3] = {0.83333f, 0.89743f, 1.458333f};
 
 
 fp32 INS_quat[4] = {0.0f, 0.0f, 0.0f, 0.0f};
@@ -94,8 +98,10 @@ void INS_task(void const *pvParameters)
         osDelay(100);
     }
 
-    BMI088_read(bmi088_real_data.gyro, bmi088_real_data.accel, &bmi088_real_data.temp);
+    osDelay(100);
 
+    Flash_ReadMagCal(magBias, magScale);
+    BMI088_read(bmi088_real_data.gyro, bmi088_real_data.accel, &bmi088_real_data.temp);
     AHRS_init(INS_quat, bmi088_real_data.accel, ist8310_real_data.mag);
 
     //set spi frequency
@@ -118,12 +124,25 @@ void INS_task(void const *pvParameters)
         while (ulTaskNotifyTake(pdTRUE, portMAX_DELAY) != pdPASS)
         {
         }
-        
-        BMI088_read(bmi088_real_data.gyro, bmi088_real_data.accel, &bmi088_real_data.temp);
-        AHRS_update(INS_quat, 0.001f, bmi088_real_data.gyro, bmi088_real_data.accel, ist8310_real_data.mag);
-        get_angle(INS_quat, INS_angle + INS_YAW_ADDRESS_OFFSET, INS_angle + INS_PITCH_ADDRESS_OFFSET, INS_angle + INS_ROLL_ADDRESS_OFFSET);
+        if (mag_cal_flag)
+        {
+            if (!do_once_flag){
+                ist8310_mag_cal(magBias, magScale);
+                Flash_SaveMagCal(magBias, magScale);
+                uart_dma_printf(&huart1,"done\n");
+                INS_angle[0] = 1.0f;
 
-        uart_dma_printf(&huart1,"%4.3f, %4.3f, %4.3f, %4.3f, %4.3f, %4.3f\n",INS_angle[0], INS_angle[1], INS_angle[2], ist8310_real_data.mag[0], ist8310_real_data.mag[1], ist8310_real_data.mag[2]);
+                do_once_flag = 1;
+            }
+        }
+        else
+        {
+            BMI088_read(bmi088_real_data.gyro, bmi088_real_data.accel, &bmi088_real_data.temp);
+            AHRS_update(INS_quat, 0.001f, bmi088_real_data.gyro, bmi088_real_data.accel, ist8310_real_data.mag);
+            get_angle(INS_quat, INS_angle + INS_YAW_ADDRESS_OFFSET, INS_angle + INS_PITCH_ADDRESS_OFFSET, INS_angle + INS_ROLL_ADDRESS_OFFSET);
+
+            uart_dma_printf(&huart1,"%4.3f, %4.3f, %4.3f, %4.3f, %4.3f, %4.3f\n",INS_angle[0], INS_angle[1], INS_angle[2], ist8310_real_data.mag[0], ist8310_real_data.mag[1], ist8310_real_data.mag[2]);
+        }
     }
 }
 
@@ -176,6 +195,9 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
             mag_update_flag |= (1 << IMU_SPI_SHFITS);
 
             ist8310_read_mag(ist8310_real_data.mag);
+            ist8310_real_data.mag[0] = (ist8310_real_data.mag[0] - magBias[0]) * magScale[0];
+            ist8310_real_data.mag[1] = (ist8310_real_data.mag[1] - magBias[1]) * magScale[1];
+            ist8310_real_data.mag[2] = (ist8310_real_data.mag[2] - magBias[2]) * magScale[2];
         }
     }
 }
