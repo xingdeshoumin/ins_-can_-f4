@@ -146,8 +146,10 @@ bool_t bmi088_accel_init(void)
     {
 
         BMI088_accel_write_single_reg(write_BMI088_accel_reg_data_error[write_reg_num][0], write_BMI088_accel_reg_data_error[write_reg_num][1]);
-        BMI088_delay_us(BMI088_COM_WAIT_SENSOR_TIME);
+        BMI088_delay_ms(BMI088_LONG_DELAY_TIME);
 
+        BMI088_accel_read_single_reg(write_BMI088_accel_reg_data_error[write_reg_num][0], res);
+        BMI088_delay_us(BMI088_COM_WAIT_SENSOR_TIME);
         BMI088_accel_read_single_reg(write_BMI088_accel_reg_data_error[write_reg_num][0], res);
         BMI088_delay_us(BMI088_COM_WAIT_SENSOR_TIME);
 
@@ -251,8 +253,10 @@ bool_t bmi088_accel_self_test(void)
     {
 
         BMI088_accel_write_single_reg(write_BMI088_ACCEL_self_test_Reg_Data_Error[write_reg_num][0], write_BMI088_ACCEL_self_test_Reg_Data_Error[write_reg_num][1]);
-        BMI088_delay_us(BMI088_COM_WAIT_SENSOR_TIME);
+        BMI088_delay_ms(BMI088_LONG_DELAY_TIME);
 
+        BMI088_accel_read_single_reg(write_BMI088_ACCEL_self_test_Reg_Data_Error[write_reg_num][0], res);
+        BMI088_delay_us(BMI088_COM_WAIT_SENSOR_TIME);
         BMI088_accel_read_single_reg(write_BMI088_ACCEL_self_test_Reg_Data_Error[write_reg_num][0], res);
         BMI088_delay_us(BMI088_COM_WAIT_SENSOR_TIME);
 
@@ -269,8 +273,10 @@ bool_t bmi088_accel_self_test(void)
     {
 
         BMI088_accel_write_single_reg(write_BMI088_ACCEL_self_test_Reg_Data_Error[write_reg_num + 4][0], write_BMI088_ACCEL_self_test_Reg_Data_Error[write_reg_num + 4][1]);
-        BMI088_delay_us(BMI088_COM_WAIT_SENSOR_TIME);
+        BMI088_delay_ms(BMI088_LONG_DELAY_TIME);
 
+        BMI088_accel_read_single_reg(write_BMI088_ACCEL_self_test_Reg_Data_Error[write_reg_num + 4][0], res);
+        BMI088_delay_us(BMI088_COM_WAIT_SENSOR_TIME);
         BMI088_accel_read_single_reg(write_BMI088_ACCEL_self_test_Reg_Data_Error[write_reg_num + 4][0], res);
         BMI088_delay_us(BMI088_COM_WAIT_SENSOR_TIME);
 
@@ -291,6 +297,8 @@ bool_t bmi088_accel_self_test(void)
 
     //set self test off
     BMI088_accel_write_single_reg(BMI088_ACC_SELF_TEST, BMI088_ACC_SELF_TEST_OFF);
+    BMI088_delay_ms(BMI088_LONG_DELAY_TIME);
+    BMI088_accel_read_single_reg(BMI088_ACC_SELF_TEST, res);
     BMI088_delay_us(BMI088_COM_WAIT_SENSOR_TIME);
     BMI088_accel_read_single_reg(BMI088_ACC_SELF_TEST, res);
     BMI088_delay_us(BMI088_COM_WAIT_SENSOR_TIME);

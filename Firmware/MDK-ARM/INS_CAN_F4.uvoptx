@@ -152,9 +152,9 @@
         <Bp>
           <Number>0</Number>
           <Type>0</Type>
-          <LineNumber>127</LineNumber>
+          <LineNumber>91</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>134240746</Address>
+          <Address>134240614</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
@@ -163,23 +163,7 @@
           <BreakIfRCount>1</BreakIfRCount>
           <Filename>..\application\INS_task.c</Filename>
           <ExecCommand></ExecCommand>
-          <Expression>\\INS_CAN_F4\../application/INS_task.c\127</Expression>
-        </Bp>
-        <Bp>
-          <Number>1</Number>
-          <Type>0</Type>
-          <LineNumber>103</LineNumber>
-          <EnabledFlag>1</EnabledFlag>
-          <Address>134240658</Address>
-          <ByteObject>0</ByteObject>
-          <HtxType>0</HtxType>
-          <ManyObjects>0</ManyObjects>
-          <SizeOfObject>0</SizeOfObject>
-          <BreakByAccess>0</BreakByAccess>
-          <BreakIfRCount>1</BreakIfRCount>
-          <Filename>..\application\INS_task.c</Filename>
-          <ExecCommand></ExecCommand>
-          <Expression>\\INS_CAN_F4\../application/INS_task.c\103</Expression>
+          <Expression>\\INS_CAN_F4\../application/INS_task.c\91</Expression>
         </Bp>
       </Breakpoint>
       <WatchWindow1>
