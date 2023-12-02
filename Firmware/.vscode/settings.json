@@ -7,6 +7,8 @@
         "struct_typedef.h": "c",
         "bmi088driver.h": "c",
         "bsp_delay.h": "c",
-        "flashstorage.h": "c"
+        "flashstorage.h": "c",
+        "ins_task.h": "c",
+        "stm32f4xx.h": "c"
     }
 }

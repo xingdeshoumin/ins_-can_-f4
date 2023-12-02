@@ -124,7 +124,7 @@ void INS_task(void const *pvParameters)
         while (ulTaskNotifyTake(pdTRUE, portMAX_DELAY) != pdPASS)
         {
         }
-        if (mag_cal_flag)
+        if (mag_cal_flag && !do_once_flag)
         {
             if (!do_once_flag){
                 ist8310_mag_cal(magBias, magScale);

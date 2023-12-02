@@ -10,6 +10,7 @@ uint8_t byte_0[8];
 void SendTask(void const * argument)
 {
   /* USER CODE BEGIN SendTask */
+  CAN_InitArgument();
   /* Infinite loop */
   for(;;)
   {

@@ -41,3 +41,9 @@ INT1_Gyro正常
 ![IMG_1501](updatelogs.assets/IMG_1501.jpg)
 
 CS1_Gyro一直为低
+
+
+
+## 12.1.11：24
+
+如果在HAL_CAN_RxFifo0MsgPendingCallback中没有switch那个id， 是不会进中断的。

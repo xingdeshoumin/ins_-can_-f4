@@ -23,6 +23,7 @@
 "ins_can_f4\usart.o"
 "ins_can_f4\stm32f4xx_it.o"
 "ins_can_f4\stm32f4xx_hal_msp.o"
+"ins_can_f4\stm32f4xx_hal_timebase_tim.o"
 "ins_can_f4\stm32f4xx_hal_can.o"
 "ins_can_f4\stm32f4xx_hal_rcc.o"
 "ins_can_f4\stm32f4xx_hal_rcc_ex.o"

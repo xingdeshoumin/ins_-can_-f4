@@ -1,58 +1,32 @@
-/**************************************************************************************** 
-  * @file       bsp_can.c
-  * @brief      Initialization of CAN communication and receive data from the CAN bus
-  * @author     CHEN Shu
-  ***************************************************************************************
-  * Version     Date           Author        Modification
-  * V1.0.0      Dec-04-2020    CHEN Shu      Î´Íê³É
-  * -------------------------- Personal Add ---------------------------------------------
-  * @initialize 
-  * @funtion    
-  * @note       
-  ***************************************************************************************
-  */
-  
-/****************************** Private includes *******************************/
-
 #include "bsp_can.h"
 
-/****************************** Private defines ********************************/
-SMALL_MOTOR motor;
+fchange_t  data4bytes;
+gyro_param   	gyro_pitch = {0};
 
-/**************************** Functions declaration ****************************/
-static void CANFilter_Enable(CAN_HandleTypeDef* hcan);
+#define TEMP_CONFINE   70
 
-/****************************** Private functions ******************************/
-// Some initialization function --------------------------
-/**
-  * @brief     Enable CAN1 and CAN2
-  * @param     None
-  * @return    0 if succeed/ 1 if failed
-  */
-uint8_t MY_CAN_Enable(CAN_HandleTypeDef *hcan)
+
+void CAN_InitArgument(void)
 {
-    CANFilter_Enable(hcan);  //Ê¹ÄÜÂË²¨Æ÷
-    HAL_CAN_Start(hcan);  //¶ÔCAN½øĞĞ¼¤»î
-    HAL_CAN_ActivateNotification(hcan, CAN_IT_RX_FIFO0_MSG_PENDING);  //Ê¹ÄÜCAN½ÓÊÕÖĞ¶Ï
-
-    return 0;
+    CAN_Enable(&hcan1);
 }
 
 
-/**
- * @brief     Enable filter
- * @param     None
- * @return    None
- * @attention filter bank 0 for CAN1 and filter bank 14 for CAN2
- */
-static void CANFilter_Enable(CAN_HandleTypeDef* hcan)
+void CAN_Enable(CAN_HandleTypeDef *hcan)
+{
+	HAL_CAN_Start(hcan);//å¯¹canè¿›è¡Œæ¿€æ´»
+	HAL_CAN_ActivateNotification(hcan, CAN_IT_RX_FIFO0_MSG_PENDING);//ä½¿èƒ½canæ¥æ”¶ä¸­æ–­
+	CANFilter_Enable(hcan);//ä½¿èƒ½æ»¤æ³¢å™¨
+}
+
+
+void CANFilter_Enable(CAN_HandleTypeDef *hcan)
 {
 	CAN_FilterTypeDef filter1;
-
-	if (hcan->Instance == CAN1)
+	if(hcan->Instance == CAN1)
 	{
 		filter1.FilterActivation=ENABLE;
-		filter1.FilterBank=14;
+		filter1.FilterBank=0U;
 		filter1.FilterFIFOAssignment=CAN_FILTER_FIFO0;
 		filter1.FilterIdHigh=0x0000;
 		filter1.FilterIdLow=0x0000;
@@ -62,84 +36,116 @@ static void CANFilter_Enable(CAN_HandleTypeDef* hcan)
 		filter1.FilterScale=CAN_FILTERSCALE_32BIT;
 		filter1.SlaveStartFilterBank=14;
 		
-		HAL_CAN_ConfigFilter(&hcan1, &filter1);
+		HAL_CAN_ConfigFilter(&hcan1,&filter1);
 	}
-
+	
 }
 
-
-// CAN transmit data function --------------------------------
-/**
-  * @brief  Sent current data to electronic speed contrlloer by 'CAN_Transmit_IT'
-  * @param  <Target_hcan>: The handle pointer of the CAN port we are using
-  * 		<current1>: 1 to 2 byte of data to the motor whose ID is 0x201, ranging [-16384,16384]
-  * 		<current2>: 3 to 4 byte of data to the motor whose ID is 0x202, ranging [-16384,16384]
-  * 		<current3>: 5 to 6 byte of data to the motor whose ID is 0x203, ranging [-10000,10000]
-  * 		<current4>: Reset
-  * @retval 0 if succeed/ 1 if failed
-  */
-uint8_t CANTx_SendCurrent(CAN_HandleTypeDef* Target_hcan, uint32_t id, int16_t current1, int16_t current2, int16_t current3, int16_t current4)
-{
-    //ÉùÃ÷´æ´¢·¢ËÍÊı¾İµÄ½á¹¹Ìå
-    uint8_t EC_message[8] = {0};
-    //¶¨Òå CAN µÄ·¢ËÍÏûÏ¢¾ä±ú
-    CAN_TxHeaderTypeDef CanTxHeader;
-    //¶¨Òå·¢ËÍÓÊÏä
-    uint32_t TX_MailBOX = CAN_TX_MAILBOX0;
-
-    //ÅäÖÃ CAN µÄ·¢ËÍÏûÏ¢¾ä±ú
-    CanTxHeader.StdId = id;
-    CanTxHeader.IDE = CAN_ID_STD;
-    CanTxHeader.RTR = CAN_RTR_DATA;
-    CanTxHeader.DLC = 0x08;
-
-    EC_message[0] = (unsigned char)(current1 >> 8);
-    EC_message[1] = (unsigned char)current1;
-    EC_message[2] = (unsigned char)(current2 >> 8);
-    EC_message[3] = (unsigned char)current2;
-    EC_message[4] = (unsigned char)(current3 >> 8);
-    EC_message[5] = (unsigned char)current3;
-    EC_message[6] = (unsigned char)(current4 >> 8);
-    EC_message[7] = (unsigned char)current4;
-
-    //½«·¢ËÍµÄĞÅÏ¢Ìí¼Óµ½ĞÅÏä£¬Ö®ºó·¢ËÍ
-    if(HAL_CAN_AddTxMessage(Target_hcan, &CanTxHeader, EC_message, &TX_MailBOX) != HAL_OK)
-    {
-        return 1;
-    }
-    return 0;
-}
-
-uint16_t cccc;
-// CAN interruption callback function ------------------------------
-/**
- * @brief     interrupt function in IRQ
- * @param     None
- * @return    None
- * @attention None
- */
 void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan)
 {
-	static uint8_t CAN1_RX_Buff[8];
-	CAN_RxHeaderTypeDef Can1RxHeader,Can2RxHeader; //header we need to receive the data from CAN
-	//if the interruption source is CAN1, mainly the chassis
-	if (hcan->Instance == CAN1)
-	{
-		HAL_CAN_GetRxMessage(&hcan1, CAN_RX_FIFO0, &Can1RxHeader, CAN1_RX_Buff); //fetch data from FIFO to 'CANx_RX_Buff'
-		//judge the ID to check which motor
-		switch (Can1RxHeader.StdId)
-		{
-            case CAN_MAG_CAL_ID: 
+	CAN_Message can1_rx_message;
+	CAN_RxHeaderTypeDef Can1RxHeader;
+	if(hcan->Instance == CAN1)
+    {
+        HAL_CAN_GetRxMessage(&hcan1,CAN_RX_FIFO0,&Can1RxHeader,can1_rx_message.Data);
+        switch (Can1RxHeader.StdId)
+        {
+            case CAN_MAG_CAL_ID:
             {
-                mag_cal_flag = CAN1_RX_Buff[0];
-            }break;
-		}
-	}
-    cccc++;//×ÔÔö£¬ÅĞ¶ÏÊÇ·ñ³É¹¦½øÈëCANÖĞ¶Ï»Øµ÷
+                mag_cal_flag = can1_rx_message.Data[0];
+            }
+            break;
+        }
+	    
+    }
+}
+
+void CAN_send_current(CAN_HandleTypeDef *hcan,uint32_t id,int16_t motor1, int16_t motor2, int16_t motor3,int16_t motor4)
+{
+    CAN_TxHeaderTypeDef  tx_message;
+    uint8_t              can_send_data[8];
+    uint32_t send_mail_box;
+    tx_message.StdId = id;
+    tx_message.IDE = CAN_ID_STD;
+    tx_message.RTR = CAN_RTR_DATA;
+    tx_message.DLC = 0x08;
+    can_send_data[0] = motor1 >> 8;
+    can_send_data[1] = motor1;
+    can_send_data[2] = motor2 >> 8;
+    can_send_data[3] = motor2;
+    can_send_data[4] = motor3 >> 8;
+    can_send_data[5] = motor3;
+    can_send_data[6] = motor4 >> 8;
+    can_send_data[7] = motor4;
+    
+   HAL_CAN_AddTxMessage(hcan, &tx_message, can_send_data, &send_mail_box);
+} 
+
+void CAN_send_data_2(CAN_HandleTypeDef *hcan,uint32_t id,int8_t data1,int8_t data2)
+{
+    CAN_TxHeaderTypeDef  tx_message;
+    uint8_t              can_send_data[8];
+    uint32_t send_mail_box;
+    tx_message.StdId = id;
+    tx_message.IDE = CAN_ID_STD;
+    tx_message.RTR = CAN_RTR_DATA;
+    tx_message.DLC = 0x08;
+    can_send_data[0] = data1;
+    can_send_data[1] = data2;
+    HAL_CAN_AddTxMessage(hcan, &tx_message, can_send_data, &send_mail_box);
+
+}
+
+void CAN_send_data_4(CAN_HandleTypeDef *hcan,uint32_t id,int8_t data1,int8_t data2,int8_t data3,int8_t data4)
+{
+    CAN_TxHeaderTypeDef  tx_message;
+    uint8_t              can_send_data[8];
+    uint32_t send_mail_box;
+    tx_message.StdId = id;
+    tx_message.IDE = CAN_ID_STD;
+    tx_message.RTR = CAN_RTR_DATA;
+    tx_message.DLC = 0x08;
+    can_send_data[0] = data1;
+    can_send_data[1] = data2;
+    can_send_data[2] = data3;
+    can_send_data[3] = data4;
+    HAL_CAN_AddTxMessage(hcan, &tx_message, can_send_data, &send_mail_box);
+
+}
+
+
+/**
+  * @brief     get gyro data and unpack the data 
+* @param     ptr: Pointer to a wl2data structure  ptrr: Pointer to a wl4data structure
+  * @attention this function should be called after gyro is read
+  */
+void gyro_data_handle(fchange_t* ptrr,float* gyro,uint8_t RxData[])
+{
+	
+    ptrr->c[0] = RxData[0];
+    ptrr->c[1] = RxData[1];
+    ptrr->c[2] = RxData[2];
+    ptrr->c[3] = RxData[3];
+    *gyro = ptrr->f;	
+}
+
+void BMI088_data_handle(uint8_t RxData[], float* TxData1, float* TxData2)
+{
+    fchange_t changer1, changer2;
+    changer1.c[0] = RxData[0];
+    changer1.c[1] = RxData[1];
+    changer1.c[2] = RxData[2];
+    changer1.c[3] = RxData[3];
+    changer2.c[0] = RxData[4];
+    changer2.c[1] = RxData[5];
+    changer2.c[2] = RxData[6];
+    changer2.c[3] = RxData[7];
+    *TxData1 = changer1.f;
+    *TxData2 = changer2.f;
 }
 
 uint8_t send_succeed = 0;
-/*CAN·¢ËÍ1¸ö4¸öÔªËØµÄuint8_tÊı×é£¬¹²32Î»(´ÓfloatÀàĞÍ×ª»»¶øÀ´)*/
+/*CANå‘é€1ä¸ª4ä¸ªå…ƒç´ çš„uint8_tæ•°ç»„ï¼Œå…±32ä½(ä»floatç±»å‹è½¬æ¢è€Œæ¥)*/
 void CAN_send_data(CAN_HandleTypeDef *hcan,uint32_t id, uint8_t data[])
 {
     CAN_TxHeaderTypeDef  tx_message;
