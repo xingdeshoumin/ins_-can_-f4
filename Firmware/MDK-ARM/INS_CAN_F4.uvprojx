@@ -498,6 +498,16 @@
               <FileType>5</FileType>
               <FilePath>..\components\algorithm\user_lib.h</FilePath>
             </File>
+            <File>
+              <FileName>foc_utils.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\components\algorithm\foc_utils.c</FilePath>
+            </File>
+            <File>
+              <FileName>foc_utils.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\components\algorithm\foc_utils.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -547,6 +557,16 @@
               <FileName>ist8310driver_middleware.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\components\devices\ist8310driver_middleware.h</FilePath>
+            </File>
+            <File>
+              <FileName>MagneticSensor.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\components\devices\MagneticSensor.c</FilePath>
+            </File>
+            <File>
+              <FileName>MagneticSensor.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\components\devices\MagneticSensor.h</FilePath>
             </File>
           </Files>
         </Group>

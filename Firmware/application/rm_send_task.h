@@ -5,6 +5,9 @@
 #include "bsp_can.h"
 #include "main.h"
 #include "struct_typedef.h"
+#include "MagneticSensor.h"
+#include "FlashStorage.h"
+#include "foc_utils.h"
 
 // #define RIGHT_UP_LEG // 0x01 0x02
 #define LEFT_UP_LEG // 0x03 0x04

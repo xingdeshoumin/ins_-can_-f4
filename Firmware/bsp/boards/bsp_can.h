@@ -3,7 +3,6 @@
 
 #include "stm32f4xx.h"
 #include "can.h"
-#include "INS_task.h"
 
 typedef struct
 {

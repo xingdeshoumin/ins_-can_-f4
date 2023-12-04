@@ -37,5 +37,3 @@ ins_can_f4\bsp_can.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h
 ins_can_f4\bsp_can.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h
 ins_can_f4\bsp_can.o: ../Core/Inc/can.h
 ins_can_f4\bsp_can.o: ../Core/Inc/main.h
-ins_can_f4\bsp_can.o: ../application/INS_task.h
-ins_can_f4\bsp_can.o: ../application/struct_typedef.h

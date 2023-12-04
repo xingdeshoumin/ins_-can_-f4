@@ -37,3 +37,5 @@ ins_can_f4\flashstorage.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim
 ins_can_f4\flashstorage.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h
 ins_can_f4\flashstorage.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h
 ins_can_f4\flashstorage.o: D:\Program Files\keil_v5\ARM\ARMCC\Bin\..\include\string.h
+ins_can_f4\flashstorage.o: ..\bsp\boards\bsp_flash.h
+ins_can_f4\flashstorage.o: ../application/struct_typedef.h

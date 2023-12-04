@@ -41,6 +41,8 @@ void CANFilter_Enable(CAN_HandleTypeDef *hcan)
 	
 }
 
+uint8_t mag_cal_flag;
+uint8_t angle_cal_flag;
 void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan)
 {
 	CAN_Message can1_rx_message;
@@ -53,6 +55,7 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan)
             case CAN_MAG_CAL_ID:
             {
                 mag_cal_flag = can1_rx_message.Data[0];
+                angle_cal_flag = can1_rx_message.Data[1];
             }
             break;
         }

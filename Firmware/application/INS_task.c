@@ -61,8 +61,9 @@ volatile uint8_t accel_update_flag = 0;
 volatile uint8_t accel_temp_update_flag = 0;
 volatile uint8_t mag_update_flag = 0;
 volatile uint8_t imu_start_dma_flag = 0;
-uint8_t mag_cal_flag = 0;
+extern uint8_t mag_cal_flag;
 uint8_t do_once_flag;
+uint8_t mag_cal_flag_last;
 
 bmi088_real_data_t bmi088_real_data;
 ist8310_real_data_t ist8310_real_data;
@@ -124,16 +125,14 @@ void INS_task(void const *pvParameters)
         while (ulTaskNotifyTake(pdTRUE, portMAX_DELAY) != pdPASS)
         {
         }
+        if (mag_cal_flag_last && !mag_cal_flag)
+        {
+            ist8310_mag_cal(magBias, magScale);
+            Flash_SaveMagCal(magBias, magScale);
+        }
         if (mag_cal_flag && !do_once_flag)
         {
-            if (!do_once_flag){
-                ist8310_mag_cal(magBias, magScale);
-                Flash_SaveMagCal(magBias, magScale);
-                uart_dma_printf(&huart1,"done\n");
-                INS_angle[0] = 1.0f;
-
-                do_once_flag = 1;
-            }
+            ist8310_mag_collect();
         }
         else
         {
@@ -143,6 +142,7 @@ void INS_task(void const *pvParameters)
 
             uart_dma_printf(&huart1,"%4.3f, %4.3f, %4.3f, %4.3f, %4.3f, %4.3f\n",INS_angle[0], INS_angle[1], INS_angle[2], ist8310_real_data.mag[0], ist8310_real_data.mag[1], ist8310_real_data.mag[2]);
         }
+        mag_cal_flag_last = mag_cal_flag;
     }
 }
 
@@ -162,9 +162,9 @@ void AHRS_update(fp32 quat[4], fp32 time, fp32 gyro[3], fp32 accel[3], fp32 mag[
 }
 void get_angle(fp32 q[4], fp32 *yaw, fp32 *pitch, fp32 *roll)
 {
-    *yaw = atan2f(2.0f*(q[0]*q[3]+q[1]*q[2]), 2.0f*(q[0]*q[0]+q[1]*q[1])-1.0f) * 57.295779513f;
-    *pitch = asinf(-2.0f*(q[1]*q[3]-q[0]*q[2])) * 57.295779513f;
-    *roll = atan2f(2.0f*(q[0]*q[1]+q[2]*q[3]),2.0f*(q[0]*q[0]+q[3]*q[3])-1.0f) * 57.295779513f;
+    *yaw = atan2f(2.0f*(q[0]*q[3]+q[1]*q[2]), 2.0f*(q[0]*q[0]+q[1]*q[1])-1.0f);
+    *pitch = asinf(-2.0f*(q[1]*q[3]-q[0]*q[2]));
+    *roll = atan2f(2.0f*(q[0]*q[1]+q[2]*q[3]),2.0f*(q[0]*q[0]+q[3]*q[3])-1.0f);
 }
 
 

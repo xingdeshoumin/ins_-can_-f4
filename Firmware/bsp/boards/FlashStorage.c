@@ -1,10 +1,39 @@
 #include "FlashStorage.h"
 #include <string.h>
+#include "bsp_flash.h"
 
-#define FLAH_STORAGE_CAL_ADDR 0x08010000
-#define FLASH_STORAGE_PARAM_ADDR 0x08007800 //电机结构参数存在Flash第30页
-#define FLASH_STORAGE_ID_ADDR 0x08007C00 //电机ID存在Flash第31页
+#define FLAH_STORAGE_ANG_ADDR ADDR_FLASH_SECTOR_5
+#define FLAH_STORAGE_CAL_ADDR ADDR_FLASH_SECTOR_4
 #define FLASH_STORAGE_AVAIL_FLAG 0xA5A5A5A5 //Flash数据有效标志
+
+// 储存关节编码器校准参数
+void Flash_SaveAngleCal(float cal_offset)
+{
+    FLASH_EraseInitTypeDef erase;
+    uint32_t error = 0;
+
+	erase.Sector = FLASH_SECTOR_5;
+    erase.TypeErase = FLASH_TYPEERASE_SECTORS;
+    erase.VoltageRange = FLASH_VOLTAGE_RANGE_3;
+	erase.NbSectors = 1;
+
+    HAL_FLASH_Unlock();
+	HAL_FLASHEx_Erase(&erase, &error);
+
+    HAL_FLASH_Program(FLASH_TYPEPROGRAM_WORD, FLAH_STORAGE_ANG_ADDR, FLASH_STORAGE_AVAIL_FLAG);
+	HAL_FLASH_Program(FLASH_TYPEPROGRAM_WORD, FLAH_STORAGE_ANG_ADDR+4, (*((uint32_t*)&cal_offset)));
+	
+	HAL_FLASH_Lock();
+}
+
+int Flash_ReadAngleCal(float* cal_offset)
+{
+    uint32_t *buf = (uint32_t*)FLAH_STORAGE_ANG_ADDR;
+    if(buf[0] != FLASH_STORAGE_AVAIL_FLAG)
+		return -1;
+    *cal_offset = *((float*)&buf[1]);
+    return 0;
+}
 
 // 储存磁力计校准参数
 void Flash_SaveMagCal(float magBias[3], float magScale[3])

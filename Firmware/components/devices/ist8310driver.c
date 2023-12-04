@@ -36,6 +36,9 @@ static const uint8_t ist8310_write_reg_data_error[IST8310_WRITE_REG_NUM][3] =
         {0x42, 0xC0, 0x03},
         {0x0A, 0x0B, 0x04}};
 
+float mag_max[3] = {-32767.0f, -32767.0f, -32767.0f}, mag_min[3] = {32767.0f, 32767.0f, 32767.0f};
+
+
 uint8_t ist8310_init(void)
 {
     static const uint8_t wait_time = 1;
@@ -108,22 +111,21 @@ void ist8310_read_mag(fp32 mag[3])
     mag[2] = MAG_SEN * -temp_ist8310_data;
 }
 
+void ist8310_mag_collect(void)
+{
+    float mag_temp[3] = {0.0f, 0.0f, 0.0f};
+    ist8310_read_mag(mag_temp);
+    for (int jj = 0; jj < 3; jj++) {
+        if(mag_temp[jj] > mag_max[jj]) mag_max[jj] = mag_temp[jj];
+        if(mag_temp[jj] < mag_min[jj]) mag_min[jj] = mag_temp[jj];
+    }
+
+}
+
 void ist8310_mag_cal(fp32 magBias[3], fp32 magScale[3])
 {
-    float mag_max[3] = {-32767.0f, -32767.0f, -32767.0f}, mag_min[3] = {32767.0f, 32767.0f, 32767.0f}, mag_temp[3] = {0.0f, 0.0f, 0.0f};
+    
     int32_t mag_bias[3] = {0, 0, 0}, mag_scale[3] = {0, 0, 0};
-    static const uint8_t wait_time = 10;
-    uint16_t sample_count = 0;
-
-    for (sample_count = 0; sample_count < IST8310_MAG_CAL_COUNT; sample_count++)
-    {
-        ist8310_read_mag(mag_temp);
-        for (int jj = 0; jj < 3; jj++) {
-            if(mag_temp[jj] > mag_max[jj]) mag_max[jj] = mag_temp[jj];
-            if(mag_temp[jj] < mag_min[jj]) mag_min[jj] = mag_temp[jj];
-        }
-        ist8310_delay_ms(wait_time);
-    }
     
     mag_bias[0]  = (mag_max[0] + mag_min[0])/2;  // get average x mag bias in counts
     mag_bias[1]  = (mag_max[1] + mag_min[1])/2;  // get average y mag bias in counts

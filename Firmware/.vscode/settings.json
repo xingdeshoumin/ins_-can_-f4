@@ -9,6 +9,10 @@
         "bsp_delay.h": "c",
         "flashstorage.h": "c",
         "ins_task.h": "c",
-        "stm32f4xx.h": "c"
+        "stm32f4xx.h": "c",
+        "cmsis_os.h": "c",
+        "magneticsensor.h": "c",
+        "foc_utils.h": "c",
+        "ist8310driver.h": "c"
     }
 }
