@@ -208,45 +208,40 @@
         <Ww>
           <count>11</count>
           <WinNumber>1</WinNumber>
-          <ItemText>INS_angle</ItemText>
+          <ItemText>can1_rx_message.Data</ItemText>
         </Ww>
         <Ww>
           <count>12</count>
           <WinNumber>1</WinNumber>
-          <ItemText>can1_rx_message.Data</ItemText>
+          <ItemText>hcan1</ItemText>
         </Ww>
         <Ww>
           <count>13</count>
           <WinNumber>1</WinNumber>
-          <ItemText>hcan1</ItemText>
+          <ItemText>do_once_flag</ItemText>
         </Ww>
         <Ww>
           <count>14</count>
           <WinNumber>1</WinNumber>
-          <ItemText>do_once_flag</ItemText>
+          <ItemText>encoder_angle</ItemText>
         </Ww>
         <Ww>
           <count>15</count>
           <WinNumber>1</WinNumber>
-          <ItemText>encoder_angle</ItemText>
+          <ItemText>angle_cal_flag</ItemText>
         </Ww>
         <Ww>
           <count>16</count>
           <WinNumber>1</WinNumber>
-          <ItemText>angle_cal_flag</ItemText>
+          <ItemText>cal_offset</ItemText>
         </Ww>
         <Ww>
           <count>17</count>
           <WinNumber>1</WinNumber>
-          <ItemText>cal_offset</ItemText>
-        </Ww>
-        <Ww>
-          <count>18</count>
-          <WinNumber>1</WinNumber>
           <ItemText>mag_max</ItemText>
         </Ww>
         <Ww>
-          <count>19</count>
+          <count>18</count>
           <WinNumber>1</WinNumber>
           <ItemText>mag_min</ItemText>
         </Ww>
@@ -294,7 +289,7 @@
       <pSingCmdsp></pSingCmdsp>
       <pMultCmdsp></pMultCmdsp>
       <DebugDescription>
-        <Enable>1</Enable>
+        <Enable>0</Enable>
         <EnableFlashSeq>0</EnableFlashSeq>
         <EnableLog>0</EnableLog>
         <Protocol>2</Protocol>

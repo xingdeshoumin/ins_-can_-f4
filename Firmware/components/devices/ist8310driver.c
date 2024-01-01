@@ -20,6 +20,7 @@
 
 #include "ist8310driver.h"
 #include "ist8310driver_middleware.h"
+#include "math.h"
 
 #define MAG_SEN 0.3f //×ª»»³É uT
 
@@ -114,12 +115,27 @@ void ist8310_read_mag(fp32 mag[3])
 void ist8310_mag_collect(void)
 {
     float mag_temp[3] = {0.0f, 0.0f, 0.0f};
+    static uint8_t once_flag[3][2] = {0};
     ist8310_read_mag(mag_temp);
+    
     for (int jj = 0; jj < 3; jj++) {
+        if(once_flag[jj][0] == 0){
+            once_flag[jj][0]=1;
+        }
+        else if(fabs(mag_temp[jj]-mag_max[jj]) > 1.0f){
+            continue;
+        }
         if(mag_temp[jj] > mag_max[jj]) mag_max[jj] = mag_temp[jj];
+    }
+    for (int jj = 0; jj < 3; jj++) {
+        if(once_flag[jj][1] == 0){
+            once_flag[jj][1]=1;
+        }
+        else if(fabs(mag_temp[jj]-mag_min[jj]) > 1.0f){
+            continue;
+        }
         if(mag_temp[jj] < mag_min[jj]) mag_min[jj] = mag_temp[jj];
     }
-
 }
 
 void ist8310_mag_cal(fp32 magBias[3], fp32 magScale[3])

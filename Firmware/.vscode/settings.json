@@ -13,6 +13,9 @@
         "cmsis_os.h": "c",
         "magneticsensor.h": "c",
         "foc_utils.h": "c",
-        "ist8310driver.h": "c"
+        "ist8310driver.h": "c",
+        "cmath": "c",
+        "*.tcc": "c",
+        "cstdlib": "c"
     }
 }

@@ -133,6 +133,7 @@ void INS_task(void const *pvParameters)
         if (mag_cal_flag && !do_once_flag)
         {
             ist8310_mag_collect();
+            // uart_dma_printf(&huart1,"%4.3f, %4.3f, %4.3f, %4.3f, %4.3f, %4.3f\n",mag_max[0], mag_max[1], mag_max[2], mag_min[0], mag_min[1], mag_min[2]);
         }
         else
         {
@@ -140,7 +141,7 @@ void INS_task(void const *pvParameters)
             AHRS_update(INS_quat, 0.001f, bmi088_real_data.gyro, bmi088_real_data.accel, ist8310_real_data.mag);
             get_angle(INS_quat, INS_angle + INS_YAW_ADDRESS_OFFSET, INS_angle + INS_PITCH_ADDRESS_OFFSET, INS_angle + INS_ROLL_ADDRESS_OFFSET);
 
-            uart_dma_printf(&huart1,"%4.3f, %4.3f, %4.3f, %4.3f, %4.3f, %4.3f\n",INS_angle[0], INS_angle[1], INS_angle[2], ist8310_real_data.mag[0], ist8310_real_data.mag[1], ist8310_real_data.mag[2]);
+            // uart_dma_printf(&huart1,"%4.3f, %4.3f, %4.3f, %4.3f, %4.3f, %4.3f\n",INS_angle[0], INS_angle[1], INS_angle[2], ist8310_real_data.mag[0], ist8310_real_data.mag[1], ist8310_real_data.mag[2]);
         }
         mag_cal_flag_last = mag_cal_flag;
     }
