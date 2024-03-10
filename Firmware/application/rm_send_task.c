@@ -42,6 +42,12 @@ void SendTask(void const * argument)
     Float_to_Byte(INS_angle[2], encoder_angle,byte_0);
     CAN_send_data(&hcan1, 0x08, byte_0);
 #endif
+#ifdef BODY
+    Float_to_Byte(INS_angle[0], INS_angle[1], byte_0);
+    CAN_send_data(&hcan1, 0x09, byte_0);
+    Float_to_Byte(INS_angle[2], encoder_angle,byte_0);
+    CAN_send_data(&hcan1, 0x10, byte_0);
+#endif
     if (angle_cal_flag)
     {
         cal_offset = getAngle();

@@ -11,7 +11,7 @@ typedef struct
 
 typedef enum
 {
-    CAN_MAG_CAL_ID = 0x09,
+    CAN_MAG_CAL_ID = 0x11,
 } can_msg_id4;
 
 typedef enum
