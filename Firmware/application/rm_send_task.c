@@ -3,8 +3,9 @@
 
 void Float_to_Byte(float a,float b,unsigned char byte[]);
 
-extern uint8_t angle_cal_flag;
+extern uint8_t encoder_cal_flag;
 extern fp32 INS_angle[3];
+extern fp32 INS_quat[4];
 fp32 encoder_angle;
 uint8_t byte_0[8];
 uint8_t angle_cal_flag_last;
@@ -19,36 +20,46 @@ void SendTask(void const * argument)
   for(;;)
   {
 #ifdef RIGHT_UP_LEG
-    Float_to_Byte(INS_angle[0], INS_angle[1], byte_0);
+    Float_to_Byte(INS_quat[0], INS_quat[1], byte_0);
     CAN_send_data(&hcan1, 0x01, byte_0);
-    Float_to_Byte(INS_angle[2], encoder_angle,byte_0);
+    Float_to_Byte(INS_quat[2], INS_quat[3],byte_0);
     CAN_send_data(&hcan1, 0x02, byte_0);
+    Float_to_Byte(encoder_angle, 0.0f,byte_0);
+    CAN_send_data(&hcan1, 0x03, byte_0);
 #endif
 #ifdef LEFT_UP_LEG
-    Float_to_Byte(INS_angle[0], INS_angle[1], byte_0);
-    CAN_send_data(&hcan1, 0x03, byte_0);
-    Float_to_Byte(INS_angle[2], encoder_angle,byte_0);
+    Float_to_Byte(INS_quat[0], INS_quat[1], byte_0);
     CAN_send_data(&hcan1, 0x04, byte_0);
-#endif
-#ifdef LEFT_DOWN_LEG
-    Float_to_Byte(INS_angle[0], INS_angle[1], byte_0);
+    Float_to_Byte(INS_quat[2], INS_quat[3],byte_0);
     CAN_send_data(&hcan1, 0x05, byte_0);
-    Float_to_Byte(INS_angle[2], encoder_angle,byte_0);
+    Float_to_Byte(encoder_angle, 0.0f,byte_0);
     CAN_send_data(&hcan1, 0x06, byte_0);
 #endif
-#ifdef RIGHT_DOWN_LEG
-    Float_to_Byte(INS_angle[0], INS_angle[1], byte_0);
+#ifdef LEFT_DOWN_LEG
+    Float_to_Byte(INS_quat[0], INS_quat[1], byte_0);
     CAN_send_data(&hcan1, 0x07, byte_0);
-    Float_to_Byte(INS_angle[2], encoder_angle,byte_0);
+    Float_to_Byte(INS_quat[2], INS_quat[3],byte_0);
     CAN_send_data(&hcan1, 0x08, byte_0);
+    Float_to_Byte(encoder_angle, 0.0f,byte_0);
+    CAN_send_data(&hcan1, 0x09, byte_0);
+#endif
+#ifdef RIGHT_DOWN_LEG
+    Float_to_Byte(INS_quat[0], INS_quat[1], byte_0);
+    CAN_send_data(&hcan1, 0x0A, byte_0);
+    Float_to_Byte(INS_quat[2], INS_quat[3],byte_0);
+    CAN_send_data(&hcan1, 0x0B, byte_0);
+    Float_to_Byte(encoder_angle, 0.0f,byte_0);
+    CAN_send_data(&hcan1, 0x0C, byte_0);
 #endif
 #ifdef BODY
-    Float_to_Byte(INS_angle[0], INS_angle[1], byte_0);
-    CAN_send_data(&hcan1, 0x09, byte_0);
-    Float_to_Byte(INS_angle[2], encoder_angle,byte_0);
-    CAN_send_data(&hcan1, 0x10, byte_0);
+    Float_to_Byte(INS_quat[0], INS_quat[1], byte_0);
+    CAN_send_data(&hcan1, 0x0D, byte_0);
+    Float_to_Byte(INS_quat[2], INS_quat[3],byte_0);
+    CAN_send_data(&hcan1, 0x0E, byte_0);
+    Float_to_Byte(encoder_angle, 0.0f,byte_0);
+    CAN_send_data(&hcan1, 0x0F, byte_0);
 #endif
-    if (angle_cal_flag)
+    if (encoder_cal_flag)
     {
         cal_offset = getAngle();
     }
@@ -56,11 +67,11 @@ void SendTask(void const * argument)
     {
         encoder_angle = fabs((getAngle() - cal_offset));
     }
-    if (angle_cal_flag_last && !angle_cal_flag)
+    if (angle_cal_flag_last && !encoder_cal_flag)
     {
         Flash_SaveAngleCal(cal_offset);
     }
-    angle_cal_flag_last = angle_cal_flag;
+    angle_cal_flag_last = encoder_cal_flag;
     osDelay(1);
   }
   /* USER CODE END SendTask */

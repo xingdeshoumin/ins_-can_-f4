@@ -88,7 +88,7 @@ enum
 
 
 
-
+extern void Calibrate_MPU_Offset_Collect(void);
 
 extern uint8_t BMI088_init(void);
 extern bool_t bmi088_accel_self_test(void);

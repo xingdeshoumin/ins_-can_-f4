@@ -62,14 +62,17 @@ volatile uint8_t accel_temp_update_flag = 0;
 volatile uint8_t mag_update_flag = 0;
 volatile uint8_t imu_start_dma_flag = 0;
 extern uint8_t mag_cal_flag;
+extern uint8_t mpu_cal_flag;
+extern uint8_t mag_en;
 uint8_t do_once_flag;
 uint8_t mag_cal_flag_last;
-
+uint8_t mpu_cal_flag_last;
 bmi088_real_data_t bmi088_real_data;
 ist8310_real_data_t ist8310_real_data;
 fp32 magBias[3] = {4.0f, -27.0f, 61.0f};
 fp32 magScale[3] = {0.83333f, 0.89743f, 1.458333f};
-
+extern float AccelScale;
+extern float GyroOffset[3];
 
 fp32 INS_quat[4] = {0.0f, 0.0f, 0.0f, 0.0f};
 fp32 INS_angle[3] = {0.0f, 0.0f, 0.0f};      //euler angle, unit rad.Å·À­½Ç µ¥Î» rad
@@ -102,6 +105,7 @@ void INS_task(void const *pvParameters)
     osDelay(100);
 
     Flash_ReadMagCal(magBias, magScale);
+    Flash_ReadMpuCal(&AccelScale, GyroOffset);
     BMI088_read(bmi088_real_data.gyro, bmi088_real_data.accel, &bmi088_real_data.temp);
     AHRS_init(INS_quat, bmi088_real_data.accel, ist8310_real_data.mag);
 
@@ -130,10 +134,18 @@ void INS_task(void const *pvParameters)
             ist8310_mag_cal(magBias, magScale);
             Flash_SaveMagCal(magBias, magScale);
         }
-        if (mag_cal_flag && !do_once_flag)
+        else if (mag_cal_flag && !do_once_flag)
         {
             ist8310_mag_collect();
             // uart_dma_printf(&huart1,"%4.3f, %4.3f, %4.3f, %4.3f, %4.3f, %4.3f\n",mag_max[0], mag_max[1], mag_max[2], mag_min[0], mag_min[1], mag_min[2]);
+        }
+        else if (mpu_cal_flag)
+        {
+            Calibrate_MPU_Offset_Collect();
+        }
+        else if (mpu_cal_flag_last && !mpu_cal_flag)
+        {
+            Flash_SaveMpuCal(AccelScale, GyroOffset);
         }
         else
         {
@@ -144,6 +156,7 @@ void INS_task(void const *pvParameters)
             uart_dma_printf(&huart1,"%4.3f, %4.3f, %4.3f, %4.3f, %4.3f, %4.3f\n",INS_angle[0], INS_angle[1], INS_angle[2], ist8310_real_data.mag[0], ist8310_real_data.mag[1], ist8310_real_data.mag[2]);
         }
         mag_cal_flag_last = mag_cal_flag;
+        mpu_cal_flag_last = mpu_cal_flag;
     }
 }
 
@@ -158,8 +171,12 @@ void AHRS_init(fp32 quat[4], fp32 accel[3], fp32 mag[3])
 
 void AHRS_update(fp32 quat[4], fp32 time, fp32 gyro[3], fp32 accel[3], fp32 mag[3])
 {
-    MahonyAHRSupdate(quat, gyro[0], gyro[1], gyro[2], accel[0], accel[1], accel[2], mag[0], mag[1], mag[2]);
-    // MahonyAHRSupdate(quat, gyro[0], gyro[1], gyro[2], accel[0], accel[1], accel[2], 0.0f, 0.0f, 0.0f);
+    if (mag_en){
+        MahonyAHRSupdate(quat, gyro[0], gyro[1], gyro[2], accel[0], accel[1], accel[2], mag[0], mag[1], mag[2]);
+    }
+    else {
+        MahonyAHRSupdate(quat, gyro[0], gyro[1], gyro[2], accel[0], accel[1], accel[2], 0.0f, 0.0f, 0.0f);
+    }
 }
 void get_angle(fp32 q[4], fp32 *yaw, fp32 *pitch, fp32 *roll)
 {

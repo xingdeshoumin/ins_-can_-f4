@@ -1,12 +1,22 @@
 #include "BMI088driver.h"
 #include "BMI088reg.h"
 #include "BMI088Middleware.h"
-
+#include "math.h"
 
 fp32 BMI088_ACCEL_SEN = BMI088_ACCEL_3G_SEN;
 fp32 BMI088_GYRO_SEN = BMI088_GYRO_2000_SEN;
 
+float Accel[3];
+float Gyro[3];
+float TempWhenCali;
+float gNorm;
+const float gNorm_lpf = 0.9999f;
+const float GyroOffset_lpf = 0.9999f;
+float AccelScale = 1;
+float GyroOffset[3] = {0};
 
+uint8_t caliOffset = 1;
+int16_t caliCount = 0;
 
 #if defined(BMI088_USE_SPI)
 
@@ -112,6 +122,67 @@ uint8_t BMI088_init(void)
     }
 
     return error;
+}
+
+// 较准零飘
+void Calibrate_MPU_Offset_Collect(void)
+{
+    uint8_t buf[8] = {0, 0, 0, 0, 0, 0};
+    int16_t bmi088_raw_temp;
+    float gNormTemp;
+    static uint8_t once_flag_acc = 0;
+    static uint8_t once_flag_gyro[3] = {0};
+
+    BMI088_accel_read_muli_reg(BMI088_ACCEL_XOUT_L, buf, 6);
+    bmi088_raw_temp = (int16_t)((buf[1]) << 8) | buf[0];
+    Accel[0] = bmi088_raw_temp * BMI088_ACCEL_SEN;
+    bmi088_raw_temp = (int16_t)((buf[3]) << 8) | buf[2];
+    Accel[1] = bmi088_raw_temp * BMI088_ACCEL_SEN;
+    bmi088_raw_temp = (int16_t)((buf[5]) << 8) | buf[4];
+    Accel[2] = bmi088_raw_temp * BMI088_ACCEL_SEN;
+    gNormTemp = sqrtf(Accel[0] * Accel[0] +
+                        Accel[1] * Accel[1] +
+                        Accel[2] * Accel[2]);
+
+    BMI088_gyro_read_muli_reg(BMI088_GYRO_CHIP_ID, buf, 8);
+    if (buf[0] == BMI088_GYRO_CHIP_ID_VALUE)
+    {
+        bmi088_raw_temp = (int16_t)((buf[3]) << 8) | buf[2];
+        Gyro[0] = bmi088_raw_temp * BMI088_GYRO_SEN;
+        bmi088_raw_temp = (int16_t)((buf[5]) << 8) | buf[4];
+        Gyro[1] = bmi088_raw_temp * BMI088_GYRO_SEN;
+        bmi088_raw_temp = (int16_t)((buf[7]) << 8) | buf[6];
+        Gyro[2] = bmi088_raw_temp * BMI088_GYRO_SEN;
+    }
+
+    if(once_flag_acc == 0){
+        gNorm = gNormTemp;
+        once_flag_acc=1;
+    }
+    else if(fabs(gNormTemp-gNorm) <= 0.5f){
+        gNorm = gNorm*gNorm_lpf + gNormTemp*(1-gNorm_lpf);
+    }
+    
+    for (uint8_t i = 0; i < 3; i++)
+    {
+        if(once_flag_gyro[i] == 0){
+            GyroOffset[i] = Gyro[i];
+            once_flag_gyro[i]=1;
+        }
+        else if(fabs(GyroOffset[i]-Gyro[i]) <= 0.15f){
+            GyroOffset[i] = GyroOffset[i]*GyroOffset_lpf + Gyro[i]*(1-GyroOffset_lpf);
+        }
+    }
+
+    // 记录标定时IMU温度
+    BMI088_accel_read_muli_reg(BMI088_TEMP_M, buf, 2);
+    bmi088_raw_temp = (int16_t)((buf[0] << 3) | (buf[1] >> 5));
+    if (bmi088_raw_temp > 1023)
+        bmi088_raw_temp -= 2048;
+    TempWhenCali = bmi088_raw_temp * BMI088_TEMP_FACTOR + BMI088_TEMP_OFFSET;
+
+    AccelScale = 9.81f / gNorm;
+    caliCount++;
 }
 
 bool_t bmi088_accel_init(void)
@@ -432,21 +503,21 @@ void BMI088_read(fp32 gyro[3], fp32 accel[3], fp32 *temperate)
     BMI088_accel_read_muli_reg(BMI088_ACCEL_XOUT_L, buf, 6);
 
     bmi088_raw_temp = (int16_t)((buf[1]) << 8) | buf[0];
-    accel[0] = bmi088_raw_temp * BMI088_ACCEL_SEN;
+    accel[0] = bmi088_raw_temp * BMI088_ACCEL_SEN * AccelScale;
     bmi088_raw_temp = (int16_t)((buf[3]) << 8) | buf[2];
-    accel[1] = bmi088_raw_temp * BMI088_ACCEL_SEN;
+    accel[1] = bmi088_raw_temp * BMI088_ACCEL_SEN * AccelScale;
     bmi088_raw_temp = (int16_t)((buf[5]) << 8) | buf[4];
-    accel[2] = bmi088_raw_temp * BMI088_ACCEL_SEN;
+    accel[2] = bmi088_raw_temp * BMI088_ACCEL_SEN * AccelScale;
 
     BMI088_gyro_read_muli_reg(BMI088_GYRO_CHIP_ID, buf, 8);
     if(buf[0] == BMI088_GYRO_CHIP_ID_VALUE)
     {
         bmi088_raw_temp = (int16_t)((buf[3]) << 8) | buf[2];
-        gyro[0] = bmi088_raw_temp * BMI088_GYRO_SEN;
+        gyro[0] = bmi088_raw_temp * BMI088_GYRO_SEN - GyroOffset[0];
         bmi088_raw_temp = (int16_t)((buf[5]) << 8) | buf[4];
-        gyro[1] = bmi088_raw_temp * BMI088_GYRO_SEN;
+        gyro[1] = bmi088_raw_temp * BMI088_GYRO_SEN - GyroOffset[1];
         bmi088_raw_temp = (int16_t)((buf[7]) << 8) | buf[6];
-        gyro[2] = bmi088_raw_temp * BMI088_GYRO_SEN;
+        gyro[2] = bmi088_raw_temp * BMI088_GYRO_SEN - GyroOffset[2];
     }
     BMI088_accel_read_muli_reg(BMI088_TEMP_M, buf, 2);
 

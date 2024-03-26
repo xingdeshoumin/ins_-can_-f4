@@ -39,3 +39,4 @@ ins_can_f4\bmi088driver.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim
 ins_can_f4\bmi088driver.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h
 ins_can_f4\bmi088driver.o: ..\components\devices\BMI088reg.h
 ins_can_f4\bmi088driver.o: ..\components\devices\BMI088Middleware.h
+ins_can_f4\bmi088driver.o: D:\Program Files\keil_v5\ARM\ARMCC\Bin\..\include\math.h

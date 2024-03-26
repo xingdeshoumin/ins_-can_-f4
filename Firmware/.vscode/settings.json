@@ -16,6 +16,7 @@
         "ist8310driver.h": "c",
         "cmath": "c",
         "*.tcc": "c",
-        "cstdlib": "c"
+        "cstdlib": "c",
+        "ist8310driver_middleware.h": "c"
     }
 }
