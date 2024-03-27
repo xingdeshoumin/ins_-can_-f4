@@ -109,7 +109,7 @@ void ist8310_read_mag(fp32 mag[3])
     temp_ist8310_data = (int16_t)((buf[3] << 8) | buf[2]);
     mag[1] = MAG_SEN * temp_ist8310_data;
     temp_ist8310_data = (int16_t)((buf[5] << 8) | buf[4]);
-    mag[2] = MAG_SEN * -temp_ist8310_data;
+    mag[2] = MAG_SEN * temp_ist8310_data; // 更改坐标系到bmi088
 }
 
 void ist8310_mag_collect(void)

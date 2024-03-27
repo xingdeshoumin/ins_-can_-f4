@@ -253,27 +253,22 @@
         <Ww>
           <count>20</count>
           <WinNumber>1</WinNumber>
-          <ItemText>\\INS_CAN_F4\../bsp/boards/bsp_can.c\angle_cal_flag</ItemText>
+          <ItemText>mpu_cal_flag</ItemText>
         </Ww>
         <Ww>
           <count>21</count>
           <WinNumber>1</WinNumber>
-          <ItemText>mpu_cal_flag</ItemText>
+          <ItemText>GyroOffset</ItemText>
         </Ww>
         <Ww>
           <count>22</count>
           <WinNumber>1</WinNumber>
-          <ItemText>GyroOffset</ItemText>
+          <ItemText>mag_en</ItemText>
         </Ww>
         <Ww>
           <count>23</count>
           <WinNumber>1</WinNumber>
-          <ItemText>gNorm</ItemText>
-        </Ww>
-        <Ww>
-          <count>24</count>
-          <WinNumber>1</WinNumber>
-          <ItemText>mag_en</ItemText>
+          <ItemText>AccelScale</ItemText>
         </Ww>
       </WatchWindow1>
       <Tracepoint>
