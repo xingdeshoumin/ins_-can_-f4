@@ -8,7 +8,7 @@
 帧类型：标准帧
 DLC:8字节
 
-### LEG_imu
+#### LEG_imu
 
 |      名称      |  ID  |       标识符        |
 | :------------: | :--: | :-----------------: |
@@ -57,7 +57,7 @@ DLC:8字节
     | DATA[6] |              0               |
     | DATA[7] |              0               |
 
-### BODY _imu
+#### BODY _imu
 
 在**LEG_imu**的基础上增加
 
@@ -86,3 +86,21 @@ DLC:8字节
     | DATA[5] | (uint8_t)(accel[2]>>8)  |
     | DATA[6] | (uint8_t)(accel[2]>>16) |
     | DATA[7] | (uint8_t)(accel[2]>>24) |
+
+### 接收格式
+
+帧格式：DATA
+帧类型：标准帧
+DLC:8字节
+标识符：0x11
+
+| 数据域  |       内容       |
+| :-----: | :--------------: |
+| DATA[0] |   mag_cal_flag   |
+| DATA[1] | encoder_cal_flag |
+| DATA[2] |   mpu_cal_flag   |
+| DATA[3] |      mag_en      |
+| DATA[4] |       NULL       |
+| DATA[5] |       NULL       |
+| DATA[6] |       NULL       |
+| DATA[7] |       NULL       |
