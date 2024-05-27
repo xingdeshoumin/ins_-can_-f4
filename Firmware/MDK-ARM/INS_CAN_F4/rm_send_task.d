@@ -57,3 +57,4 @@ ins_can_f4\rm_send_task.o: ../components/devices/MagneticSensor.h
 ins_can_f4\rm_send_task.o: ../bsp/boards/FlashStorage.h
 ins_can_f4\rm_send_task.o: ../components/algorithm/foc_utils.h
 ins_can_f4\rm_send_task.o: D:\Program Files\keil_v5\ARM\ARMCC\Bin\..\include\math.h
+ins_can_f4\rm_send_task.o: ../components/devices/BMI088driver.h

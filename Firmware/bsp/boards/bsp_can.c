@@ -44,7 +44,7 @@ void CANFilter_Enable(CAN_HandleTypeDef *hcan)
 uint8_t mag_cal_flag;
 uint8_t encoder_cal_flag;
 uint8_t mpu_cal_flag;
-uint8_t mag_en = 1;
+uint8_t mag_en = 0;
 void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan)
 {
 	CAN_Message can1_rx_message;
