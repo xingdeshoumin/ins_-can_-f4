@@ -57,10 +57,15 @@ void SendTask(void const * argument)
     CAN_send_data(&hcan1, 0x0C, byte_0);
     Float_to_Byte(INS_quat[2], INS_quat[3],byte_0);
     CAN_send_data(&hcan1, 0x0D, byte_0);
-    Float_to_Byte(encoder_angle, bmi088_real_data.accel[0],byte_0);
+    Float_to_Byte(encoder_angle, 0.0f, byte_0);
     CAN_send_data(&hcan1, 0x0E, byte_0);
-    Float_to_Byte(bmi088_real_data.accel[1], bmi088_real_data.accel[2],byte_0);
+    
+    Float_to_Byte(bmi088_real_data.accel[0], bmi088_real_data.accel[1],byte_0);
     CAN_send_data(&hcan1, 0x0F, byte_0);
+    Float_to_Byte(bmi088_real_data.accel[2], bmi088_real_data.gyro[0],byte_0);
+    CAN_send_data(&hcan1, 0x10, byte_0);
+    Float_to_Byte(bmi088_real_data.gyro[1], bmi088_real_data.gyro[2],byte_0);
+    CAN_send_data(&hcan1, 0x11, byte_0);
 #endif
     if (encoder_cal_flag)
     {

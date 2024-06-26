@@ -61,38 +61,51 @@ DLC:8字节
 
 在**LEG_imu**的基础上增加
 
-- 标识符：0x02 + id*3
-
-    | 数据域  |             内容             |
-    | :-----: | :--------------------------: |
-    | DATA[0] |    (uint8_t)encoder_angle    |
-    | DATA[1] | (uint8_t)(encoder_angle>>8)  |
-    | DATA[2] | (uint8_t)(encoder_angle>>16) |
-    | DATA[3] | (uint8_t)(encoder_angle>>24) |
-    | DATA[4] |      (uint8_t)accel[0]       |
-    | DATA[5] |    (uint8_t)(accel[0]>>8)    |
-    | DATA[6] |   (uint8_t)(accel[0]>>16)    |
-    | DATA[7] |   (uint8_t)(accel[0]>>24)    |
-
 - 标识符：0x03 + id*3
 
     | 数据域  |          内容           |
     | :-----: | :---------------------: |
-    | DATA[0] |    (uint8_t)accel[1]    |
-    | DATA[1] | (uint8_t)(accel[1]>>8)  |
-    | DATA[2] | (uint8_t)(accel[1]>>16) |
-    | DATA[3] | (uint8_t)(accel[1]>>24) |
-    | DATA[4] |    (uint8_t)accel[2]    |
-    | DATA[5] | (uint8_t)(accel[2]>>8)  |
-    | DATA[6] | (uint8_t)(accel[2]>>16) |
-    | DATA[7] | (uint8_t)(accel[2]>>24) |
+    | DATA[0] |    (uint8_t)accel[0]    |
+    | DATA[1] | (uint8_t)(accel[0]>>8)  |
+    | DATA[2] | (uint8_t)(accel[0]>>16) |
+    | DATA[3] | (uint8_t)(accel[0]>>24) |
+    | DATA[4] |    (uint8_t)accel[1]    |
+    | DATA[5] | (uint8_t)(accel[1]>>8)  |
+    | DATA[6] | (uint8_t)(accel[1]>>16) |
+    | DATA[7] | (uint8_t)(accel[1]>>24) |
+
+- 标识符：0x04 + id*3
+
+    | 数据域  |          内容           |
+    | :-----: | :---------------------: |
+    | DATA[0] |    (uint8_t)accel[2]    |
+    | DATA[1] | (uint8_t)(accel[2]>>8)  |
+    | DATA[2] | (uint8_t)(accel[2]>>16) |
+    | DATA[3] | (uint8_t)(accel[2]>>24) |
+    | DATA[4] |    (uint8_t)gyro[0]     |
+    | DATA[5] |  (uint8_t)(gyro[0]>>8)  |
+    | DATA[6] | (uint8_t)(gyro[0]>>16)  |
+    | DATA[7] | (uint8_t)(gyro[0]>>24)  |
+
+- 标识符：0x05 + id*3
+
+    | 数据域  |          内容          |
+    | :-----: | :--------------------: |
+    | DATA[0] |    (uint8_t)gyro[1]    |
+    | DATA[1] | (uint8_t)(gyro[1]>>8)  |
+    | DATA[2] | (uint8_t)(gyro[1]>>16) |
+    | DATA[3] | (uint8_t)(gyro[1]>>24) |
+    | DATA[4] |    (uint8_t)gyro[2]    |
+    | DATA[5] | (uint8_t)(gyro[2]>>8)  |
+    | DATA[6] | (uint8_t)(gyro[2]>>16) |
+    | DATA[7] | (uint8_t)(gyro[2]>>24) |
 
 ### 接收格式
 
 帧格式：DATA
 帧类型：标准帧
 DLC:8字节
-标识符：0x11
+标识符：0x100
 
 | 数据域  |       内容       |
 | :-----: | :--------------: |
