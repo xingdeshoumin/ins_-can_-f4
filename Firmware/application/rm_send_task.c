@@ -59,7 +59,7 @@ void SendTask(void const * argument)
     CAN_send_data(&hcan1, 0x0E, byte_0);
     Float_to_Byte(encoder_angle, 0.0f, byte_0);
     CAN_send_data(&hcan1, 0x0F, byte_0);
-
+    osDelay(1);
     Float_to_Byte(bmi088_real_data.accel[0], bmi088_real_data.accel[1],byte_0);
     CAN_send_data(&hcan1, 0x10, byte_0);
     Float_to_Byte(bmi088_real_data.accel[2], bmi088_real_data.gyro[0],byte_0);

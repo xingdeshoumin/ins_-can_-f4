@@ -270,6 +270,11 @@
           <WinNumber>1</WinNumber>
           <ItemText>AccelScale</ItemText>
         </Ww>
+        <Ww>
+          <count>24</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>tx_message.StdId</ItemText>
+        </Ww>
       </WatchWindow1>
       <Tracepoint>
         <THDelay>0</THDelay>
