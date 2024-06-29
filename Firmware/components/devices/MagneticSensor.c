@@ -211,6 +211,8 @@ float getAngle(void)
 	float d_angle;
 	
 	angle_data = I2C_getRawCount();
+
+    if (angle_data != 0x0000FFFF){
 	
 	// tracking the number of rotations 
 	// in order to expand angle range form [0,2PI] to basically infinity
@@ -223,6 +225,10 @@ float getAngle(void)
 	// return the full angle 
 	// (number of full rotations)*2PI + current sensor angle 
 	return  (full_rotation_offset + ( angle_data * 1.0 / cpr) * _2PI) ;
+    }
+    else{
+        return 0.0f;
+    }
 }
 /******************************************************************************/
 
