@@ -228,7 +228,7 @@
         <Ww>
           <count>15</count>
           <WinNumber>1</WinNumber>
-          <ItemText>angle_cal_flag</ItemText>
+          <ItemText>encoder_cal_flag</ItemText>
         </Ww>
         <Ww>
           <count>16</count>
@@ -275,7 +275,20 @@
           <WinNumber>1</WinNumber>
           <ItemText>tx_message.StdId</ItemText>
         </Ww>
+        <Ww>
+          <count>25</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>angle_data</ItemText>
+        </Ww>
       </WatchWindow1>
+      <MemoryWindow1>
+        <Mm>
+          <WinNumber>1</WinNumber>
+          <SubType>0</SubType>
+          <ItemText>angle_data</ItemText>
+          <AccSizeX>0</AccSizeX>
+        </Mm>
+      </MemoryWindow1>
       <Tracepoint>
         <THDelay>0</THDelay>
       </Tracepoint>
