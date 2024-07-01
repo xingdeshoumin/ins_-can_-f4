@@ -3,9 +3,9 @@
 <title>Static Call Graph - [INS_CAN_F4\INS_CAN_F4.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image INS_CAN_F4\INS_CAN_F4.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060960: Last Updated: Sat Jun 29 12:36:21 2024
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060960: Last Updated: Tue Jul 02 00:37:50 2024
 <BR><P>
-<H3>Maximum Stack Usage =        360 bytes + Unknown(Functions without stacksize, Cycles, Untraceable Function Pointers)</H3><H3>
+<H3>Maximum Stack Usage =        424 bytes + Unknown(Functions without stacksize, Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
 INS_task &rArr; AHRS_update &rArr; MahonyAHRSupdate &rArr; __hardfp_sqrt &rArr; _dsqrt &rArr; __fpl_dnaninf
 <P>
@@ -2104,8 +2104,8 @@ Global Symbols
 <LI><a href="#[179]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;MagneticSensor_Init
 </UL>
 
-<P><STRONG><a name="[6a]"></a>INS_task</STRONG> (Thumb, 458 bytes, Stack size 88 bytes, ins_task.o(i.INS_task))
-<BR><BR>[Stack]<UL><LI>Max Depth = 360 + Unknown Stack Size
+<P><STRONG><a name="[6a]"></a>INS_task</STRONG> (Thumb, 656 bytes, Stack size 152 bytes, ins_task.o(i.INS_task))
+<BR><BR>[Stack]<UL><LI>Max Depth = 424 + Unknown Stack Size
 <LI>Call Chain = INS_task &rArr; AHRS_update &rArr; MahonyAHRSupdate &rArr; __hardfp_sqrt &rArr; _dsqrt &rArr; __fpl_dnaninf
 </UL>
 <BR>[Calls]<UL><LI><a href="#[16b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xTaskGetHandle
@@ -2921,12 +2921,12 @@ Global Symbols
 
 <P><STRONG><a name="[1c9]"></a>vTaskSuspendAll</STRONG> (Thumb, 10 bytes, Stack size 0 bytes, tasks.o(i.vTaskSuspendAll))
 <BR><BR>[Called By]<UL><LI><a href="#[16b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xTaskGetHandle
-<LI><a href="#[1a3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vTaskDelay
 <LI><a href="#[1c6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xQueueReceive
 <LI><a href="#[1df]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xQueueGenericSend
 <LI><a href="#[1ba]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vPortFree
 <LI><a href="#[1d2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;pvPortMalloc
 <LI><a href="#[1c8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prvProcessTimerOrBlockTask
+<LI><a href="#[1a3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vTaskDelay
 </UL>
 
 <P><STRONG><a name="[a3]"></a>vTaskSwitchContext</STRONG> (Thumb, 86 bytes, Stack size 0 bytes, tasks.o(i.vTaskSwitchContext))
@@ -3111,12 +3111,12 @@ Global Symbols
 <LI><a href="#[182]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xTaskIncrementTick
 </UL>
 <BR>[Called By]<UL><LI><a href="#[16b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xTaskGetHandle
-<LI><a href="#[1a3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vTaskDelay
 <LI><a href="#[1c6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xQueueReceive
 <LI><a href="#[1df]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xQueueGenericSend
 <LI><a href="#[1ba]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vPortFree
 <LI><a href="#[1d2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;pvPortMalloc
 <LI><a href="#[1c8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prvProcessTimerOrBlockTask
+<LI><a href="#[1a3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vTaskDelay
 </UL>
 
 <P><STRONG><a name="[1da]"></a>xTimerCreateTimerTask</STRONG> (Thumb, 86 bytes, Stack size 40 bytes, timers.o(i.xTimerCreateTimerTask))
@@ -3641,9 +3641,9 @@ Local Symbols
 <LI><a href="#[1a9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;uxListRemove
 </UL>
 <BR>[Called By]<UL><LI><a href="#[16c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ulTaskNotifyTake
-<LI><a href="#[1a3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vTaskDelay
 <LI><a href="#[1d7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vTaskPlaceOnEventListRestricted
 <LI><a href="#[1d8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vTaskPlaceOnEventList
+<LI><a href="#[1a3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vTaskDelay
 </UL>
 
 <P><STRONG><a name="[1ac]"></a>prvAddNewTaskToReadyList</STRONG> (Thumb, 124 bytes, Stack size 16 bytes, tasks.o(i.prvAddNewTaskToReadyList))

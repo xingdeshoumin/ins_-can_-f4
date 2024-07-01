@@ -150,10 +150,25 @@ void INS_task(void const *pvParameters)
         else
         {
             BMI088_read(bmi088_real_data.gyro, bmi088_real_data.accel, &bmi088_real_data.temp);
+            for (int i = 0; i < 3; i++){
+                if (bmi088_real_data.accel[i] > 19.62f) bmi088_real_data.accel[i] = 19.62f;
+                if (bmi088_real_data.accel[i] < -19.62f) bmi088_real_data.accel[i] = -19.62f;
+            }
+
             AHRS_update(INS_quat, 0.001f, bmi088_real_data.gyro, bmi088_real_data.accel, ist8310_real_data.mag);
             get_angle(INS_quat, INS_angle + INS_YAW_ADDRESS_OFFSET, INS_angle + INS_PITCH_ADDRESS_OFFSET, INS_angle + INS_ROLL_ADDRESS_OFFSET);
 
-            uart_dma_printf(&huart1,"%4.3f, %4.3f, %4.3f, %4.3f, %4.3f, %4.3f\n",INS_angle[0], INS_angle[1], INS_angle[2], ist8310_real_data.mag[0], ist8310_real_data.mag[1], ist8310_real_data.mag[2]);
+            uart_dma_printf(&huart1,"%4.3f, %4.3f, %4.3f, %4.3f, %4.3f, %4.3f, %4.3f, %4.3f, %4.3f, %4.3f\n",
+            INS_angle[0], 
+            INS_angle[1], 
+            INS_angle[2], 
+            bmi088_real_data.accel[0], 
+            bmi088_real_data.accel[1], 
+            bmi088_real_data.accel[2], 
+            INS_quat[0], 
+            INS_quat[1], 
+            INS_quat[2], 
+            INS_quat[3]);
         }
         mag_cal_flag_last = mag_cal_flag;
         mpu_cal_flag_last = mpu_cal_flag;
